@@ -19,10 +19,10 @@ window.onload = function() {
     registerCalculatorWindow();
     
     // Try to inject real Jupiter price immediately
-    injectJupiterPrice();
+    //injectJupiterPrice();
     
     // Set up continuous price monitoring from Tampermonkey
-    setInterval(injectJupiterPrice, 1000); // Check every second
+   // setInterval(injectJupiterPrice, 1000); // Check every second
     
     // Set initial live data (fallback if no Jupiter price)
     fetchLiveData();
