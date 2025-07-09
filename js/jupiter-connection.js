@@ -1,6 +1,17 @@
 // ============================================
 // JUPITER CONNECTION AND PRICE MANAGEMENT
 // ============================================
+// Add this at the very top of jupiter-connection.js
+window.addEventListener('message', function(event) {
+    // Listen for Tampermonkey messages
+    if (event.data && event.data.type === 'JUPITER_PRICE_FROM_TM') {
+        const price = parseFloat(event.data.price);
+        if (!isNaN(price)) {
+            console.log('🎉 Received price from Tampermonkey:', price);
+            handleJupiterPriceUpdate(price);
+        }
+    }
+});
 
 let jupiterPriceReceived = false;
 let jupiterWindow = null;
@@ -126,6 +137,14 @@ function injectJupiterPrice() {
         }
         return false; // Fallback to simulated
     }
+}
+
+// Add this function to register the calculator window
+function registerCalculatorWindow() {
+    // Store reference so Tampermonkey can find us
+    window.name = 'tradingCalculator';
+    window.localStorage.setItem('CALCULATOR_WINDOW_READY', 'true');
+    console.log('📡 Calculator registered for price updates');
 }
 
 /**

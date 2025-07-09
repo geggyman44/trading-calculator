@@ -423,6 +423,8 @@ function getIndicatorClass(signal) {
  * Initialize application on page load
  */
 window.onload = function() {
+     registerCalculatorWindow();
+    
     // Try to inject real Jupiter price immediately
     injectJupiterPrice();
     
