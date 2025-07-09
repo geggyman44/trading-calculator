@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Trading Signal Calculator</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Live Trading Signal Calculator</h1>
+        <p class="subtitle">100x Leverage Scalping Strategy - Real-time SOL Perps Analysis</p>
+        
+        <div class="live-controls">
+            <button class="live-btn" onclick="fetchLiveData()">📡 Fetch Live Data</button>
+            <button class="live-btn" onclick="connectToJupiter()" style="background: linear-gradient(135deg, #00ff88, #00cc6a);">🔗 Connect to Jupiter</button>
+            <div class="auto-refresh">
+                <span>Auto-refresh:</span>
+                <div class="toggle-switch" onclick="toggleAutoRefresh()">
+                    <div class="toggle-slider"></div>
+                </div>
+                <span id="refresh-interval">1s</span>
+                <select id="refresh-speed" onchange="changeRefreshSpeed()">
+                    <option value="1000">1s</option>
+                    <option value="2000">2s</option>
+                    <option value="5000">5s</option>
+                    <option value="10000">10s</option>
+                    <option value="30000">30s</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="status-bar">
+            <div class="status-item">
+                <div class="status-label">Live SOL Price</div>
+                <div class="status-value live-price" id="live-price">$150.21</div>
+            </div>
+            <div class="status-item">
+                <div class="status-label">Last Update</div>
+                <div class="status-value" id="last-update">Manual</div>
+            </div>
+            <div class="status-item">
+                <div class="status-label">Data Source</div>
+                <div class="status-value" id="data-source">Simulated API</div>
+            </div>
+            <div class="status-item">
+                <div class="status-label">Signal Count</div>
+                <div class="status-value" id="signal-count">0</div>
+            </div>
+        </div>
+
+        <div class="indicators-grid">
+            <div class="indicator-card">
+                <h3>📊 Bollinger Bands</h3>
+                <div class="indicator-value" id="bb-position">65%</div>
+                <div class="indicator-status neutral" id="bb-status">Calculating...</div>
+                <div class="indicator-details">
+                    Upper: <span id="bb-upper">150.37</span> | Lower: <span id="bb-lower">149.39</span>
+                </div>
+            </div>
+            
+            <div class="indicator-card">
+                <h3>📈 EMA Trend</h3>
+                <div class="indicator-value" id="ema-diff">+0.13%</div>
+                <div class="indicator-status neutral" id="ema-status">Calculating...</div>
+                <div class="indicator-details">
+                    EMA: <span id="ema-value">150.02</span>
+                </div>
+            </div>
+            
+            <div class="indicator-card">
+                <h3>⚡ RSI Momentum</h3>
+                <div class="indicator-value" id="rsi-value">64.7</div>
+                <div class="indicator-status neutral" id="rsi-status">Calculating...</div>
+                <div class="indicator-details">
+                    14-period RSI
+                </div>
+            </div>
+            
+            <div class="indicator-card">
+                <h3>🎯 MACD Signal</h3>
+                <div class="indicator-value" id="macd-histogram">+0.186</div>
+                <div class="indicator-status neutral" id="macd-status">Calculating...</div>
+                <div class="indicator-details">
+                    MACD: <span id="macd-line">0.200</span> | Signal: <span id="macd-signal">0.014</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="manual-toggle">
+            <button class="live-btn" onclick="toggleManualInputs()">🔧 Switch to Manual Input</button>
+        </div>
+
+        <div id="manual-inputs" class="manual-inputs">
+            <div class="input-group">
+                <h3>📊 Price & Bollinger Bands</h3>
+                <div class="input-row">
+                    <label>Current Price:</label>
+                    <input type="number" id="currentPrice" step="0.01" placeholder="150.21">
+                </div>
+                <div class="input-row">
+                    <label>BB Upper:</label>
+                    <input type="number" id="bbUpper" step="0.01" placeholder="150.37">
+                </div>
+                <div class="input-row">
+                    <label>BB Middle:</label>
+                    <input type="number" id="bbMiddle" step="0.01" placeholder="149.88">
+                </div>
+                <div class="input-row">
+                    <label>BB Lower:</label>
+                    <input type="number" id="bbLower" step="0.01" placeholder="149.39">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <h3>📈 EMA & RSI</h3>
+                <div class="input-row">
+                    <label>EMA Value:</label>
+                    <input type="number" id="emaValueInput" step="0.01" placeholder="150.02">
+                </div>
+                <div class="input-row">
+                    <label>RSI Value:</label>
+                    <input type="number" id="rsiValueInput" step="0.01" placeholder="64.69" min="0" max="100">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <h3>⚡ MACD Values</h3>
+                <div class="input-row">
+                    <label>MACD Line:</label>
+                    <input type="number" id="macdLineInput" step="0.01" placeholder="0.2002">
+                </div>
+                <div class="input-row">
+                    <label>Signal Line:</label>
+                    <input type="number" id="signalLineInput" step="0.01" placeholder="0.0142">
+                </div>
+                <div class="input-row">
+                    <label>Histogram:</label>
+                    <input type="number" id="histogramInput" step="0.01" placeholder="0.186">
+                </div>
+            </div>
+        </div>
+
+        <button class="calculate-btn" onclick="calculateSignal()">🎯 Calculate Trading Signal</button>
+
+        <div id="result" class="result"></div>
+
+        <div class="signal-history">
+            <h4>📈 Signal History</h4>
+            <div id="history-list">
+                <div class="history-item">
+                    <span>No signals yet - fetch live data or calculate manually</span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Files -->
+    <script src="js/indicators.js"></script>
+    <script src="js/jupiter-connection.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
