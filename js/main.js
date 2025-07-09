@@ -11,6 +11,34 @@ let isManualMode = false;
 let currentLivePrice = 150.21;
 let priceHistory = [];
 
+/**
+ * Initialize application on page load
+ */
+window.onload = function() {
+    // Add this line at the very top
+    registerCalculatorWindow();
+    
+    // Try to inject real Jupiter price immediately
+    injectJupiterPrice();
+    
+    // Set up continuous price monitoring from Tampermonkey
+    setInterval(injectJupiterPrice, 1000); // Check every second
+    
+    // Set initial live data (fallback if no Jupiter price)
+    fetchLiveData();
+    
+    // Pre-fill manual inputs for testing
+    document.getElementById('currentPrice').value = '150.21';
+    document.getElementById('bbUpper').value = '150.37';
+    document.getElementById('bbMiddle').value = '149.88';
+    document.getElementById('bbLower').value = '149.39';
+    document.getElementById('emaValueInput').value = '150.02';
+    document.getElementById('rsiValueInput').value = '64.69';
+    document.getElementById('macdLineInput').value = '0.2002';
+    document.getElementById('signalLineInput').value = '0.0142';
+    document.getElementById('histogramInput').value = '0.186';
+};
+
 // Initialize price history with some sample data
 for (let i = 26; i >= 0; i--) {
     priceHistory.push(150.21 + (Math.random() - 0.5) * 2 - i * 0.02);
