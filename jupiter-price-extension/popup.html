@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        body {
+            width: 300px;
+            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            margin: 0;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 18px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .status {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .price-display {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin: 10px 0;
+            color: #00ff88;
+            text-shadow: 0 0 10px rgba(0,255,136,0.3);
+        }
+        
+        .timestamp {
+            font-size: 12px;
+            opacity: 0.8;
+            text-align: center;
+        }
+        
+        .button {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            margin: 5px 0;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .button:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-1px);
+        }
+        
+        .indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+        
+        .active {
+            background: #00ff88;
+            box-shadow: 0 0 10px rgba(0,255,136,0.5);
+        }
+        
+        .inactive {
+            background: #ff4444;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🚀 Jupiter Price Bridge</h1>
+    </div>
+    
+    <div class="status">
+        <div>
+            <span class="indicator" id="jupiter-indicator"></span>
+            <strong>Jupiter Status:</strong> <span id="jupiter-status">Checking...</span>
+        </div>
+        <div style="margin-top: 10px;">
+            <span class="indicator" id="calculator-indicator"></span>
+            <strong>Calculator Status:</strong> <span id="calculator-status">Checking...</span>
+        </div>
+    </div>
+    
+    <div class="status">
+        <div><strong>Latest SOL Price:</strong></div>
+        <div class="price-display" id="price-display">$---</div>
+        <div class="timestamp" id="timestamp">No data yet</div>
+    </div>
+    
+    <button class="button" id="refresh-btn">🔄 Force Refresh</button>
+    <button class="button" id="test-btn">🧪 Test Connection</button>
+    
+    <script src="popup.js"></script>
+</body>
+</html>

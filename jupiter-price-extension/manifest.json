@@ -1,0 +1,31 @@
+{
+  "manifest_version": 3,
+  "name": "Jupiter Price Bridge",
+  "version": "1.0",
+  "description": "Automatically send Jupiter SOL prices to trading calculator",
+  "permissions": ["storage", "activeTab"],
+  "host_permissions": [
+    "*://*.jup.ag/*", 
+    "*://localhost:*/*", 
+    "*://*.github.io/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["*://*.jup.ag/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["*://localhost:*/*", "*://*.github.io/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Jupiter Price Bridge"
+  }
+}
