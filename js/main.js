@@ -49,9 +49,9 @@ for (let i = 26; i >= 0; i--) {
  */
 async function fetchLiveData() {
     // Try to get real Jupiter price first
-    const realDataAvailable = injectJupiterPrice();
+    //const realDataAvailable = injectJupiterPrice();
     
-    if (!realDataAvailable) {
+    if (!realDataAvailable) {/*
         // Fallback to simulated data if no real price available
         document.getElementById('last-update').textContent = 'Fetching...';
         
@@ -69,7 +69,7 @@ async function fetchLiveData() {
         // Update live display
         updateLiveDisplay(newPrice, bb, ema, rsi, macd);
         
-        document.getElementById('last-update').textContent = new Date().toLocaleTimeString();
+        document.getElementById('last-update').textContent = new Date().toLocaleTimeString();*/
     }
     
     // Auto-calculate signal regardless of data source
