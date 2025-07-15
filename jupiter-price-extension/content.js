@@ -19,68 +19,61 @@ if (isJupiter) {
  */
 function startJupiterPriceScraper() {
     function scrapeSolPrice() {
-        try {
-            let price = null;
-            
-            // Method 1: Look for price in the UI
-            const priceElements = document.querySelectorAll('span, div');
-            for (const element of priceElements) {
-                const text = element.textContent?.trim();
-                if (text && /^\$\d{2,3}\.\d{2}$/.test(text)) {
-                    const numPrice = parseFloat(text.replace('$', ''));
-                    if (numPrice > 100 && numPrice < 300) { // Reasonable SOL price range
-                        price = numPrice;
-                        break;
-                    }
-                }
+    try {
+        let price = null;
+        
+        // Method 1: Look for perp price elements with specific classes
+        const perpPriceElements = document.querySelectorAll('span[class*="text-v3-perps-"]');
+        for (const element of perpPriceElements) {
+            const text = element.textContent?.trim().replace(/"/g, ''); // Remove quotes
+            const numPrice = parseFloat(text);
+            if (!isNaN(numPrice) && numPrice > 100 && numPrice < 300) {
+                price = numPrice;
+                console.log('Found perp price via class:', price);
+                break;
             }
-            
-            // Method 2: Look for larger price displays
-            if (!price) {
-                const allText = document.body.textContent;
-                const matches = allText.match(/\$(\d{2,3}\.\d{2})/g);
-                if (matches) {
-                    for (const match of matches) {
-                        const numPrice = parseFloat(match.replace('$', ''));
-                        if (numPrice > 100 && numPrice < 300) {
-                            price = numPrice;
-                            break;
-                        }
-                    }
-                }
-            }
-            
-            if (price) {
-                // Store price using Chrome extension storage
-                const priceData = {
-                    price: price,
-                    timestamp: Date.now(),
-                    source: 'jupiter-extension'
-                };
-                
-                chrome.storage.local.set({ 'sol_price': priceData }, () => {
-                    console.log('💾 Stored SOL price:', price);
-                });
-                
-                // Also send message to background script
-                chrome.runtime.sendMessage({
-                    type: 'PRICE_UPDATE',
-                    data: priceData
-                });
-            } else {
-                console.warn('⚠️ Could not find SOL price on page');
-            }
-        } catch (error) {
-            console.error('❌ Error scraping price:', error);
         }
+        
+        // Method 2: Look for font-mono elements (backup)
+        if (!price) {
+            const monoElements = document.querySelectorAll('span.font-mono');
+            for (const element of monoElements) {
+                const text = element.textContent?.trim().replace(/"/g, '');
+                const numPrice = parseFloat(text);
+                if (!isNaN(numPrice) && numPrice > 100 && numPrice < 300) {
+                    price = numPrice;
+                    console.log('Found perp price via font-mono:', price);
+                    break;
+                }
+            }
+        }
+        
+        if (price) {
+            // Store price using Chrome extension storage
+            const priceData = {
+                price: price,
+                timestamp: Date.now(),
+                source: 'jupiter-extension'
+            };
+            
+            chrome.storage.local.set({ 'sol_price': priceData }, () => {
+                console.log('💾 Stored SOL perp price:', price);
+            });
+            
+            // Also send message to background script
+            chrome.runtime.sendMessage({
+                type: 'PRICE_UPDATE',
+                data: priceData
+            });
+        } else {
+            console.warn('⚠️ Could not find SOL perp price on page');
+        }
+    } catch (error) {
+        console.error('❌ Error scraping price:', error);
     }
-    
-    // Start scraping after page loads
-    setTimeout(() => {
-        scrapeSolPrice();
-        setInterval(scrapeSolPrice, 2000); // Every 2 seconds
-    }, 3000);
 }
+}
+    
 
 /**
  * Calculator Side - Receive and inject price
